@@ -231,6 +231,8 @@ def main():
 
 if find_last_session():
 
+    logger.info("ONGOING SESSION")
+
     start_time = datetime.now()
     while datetime.now() - start_time < timedelta(minutes=10):
         try:
