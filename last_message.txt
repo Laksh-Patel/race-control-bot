@@ -1,1 +1,1 @@
-{'session_key': 10024, 'meeting_key': 1259, 'date': '2025-05-02T21:25:39+00:00', 'category': 'Flag', 'flag': 'DOUBLE YELLOW', 'lap_number': None, 'message': 'DOUBLE YELLOW IN TRACK SECTOR 20', 'driver_number': None, 'scope': 'Sector', 'sector': 20}
+{'session_key': 10028, 'meeting_key': 1259, 'date': '2025-05-03T16:19:31+00:00', 'category': 'Flag', 'flag': 'CLEAR', 'lap_number': 1, 'message': 'CLEAR IN TRACK SECTOR 7', 'driver_number': None, 'scope': 'Sector', 'sector': 7}
