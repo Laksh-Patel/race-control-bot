@@ -42,8 +42,6 @@ CLIENT_ID_SECRET = os.environ["CLIENT_ID_SECRET"]
 ACCESS_TOKEN = os.environ["ACCESS_TOKEN"]
 ACCESS_TOKEN_SECRET = os.environ["ACCESS_TOKEN_SECRET"]
 
-logger.info(f"API_KEY TEST: {API_KEY}")
-
 client = None
 api = None
 
