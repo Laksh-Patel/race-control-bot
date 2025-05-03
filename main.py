@@ -232,7 +232,7 @@ def main():
 if find_last_session():
 
     start_time = datetime.now()
-    while datetime.now() - start_time < timedelta(minutes=5):
+    while datetime.now() - start_time < timedelta(minutes=10):
         try:
             main()
         except Exception as e:
@@ -242,4 +242,5 @@ if find_last_session():
     
 else:
 
-    logger.info("NO ONGOING SESSION")
+    logger.info("NO ONGOING SESSION") 
+
