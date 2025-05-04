@@ -26,7 +26,15 @@ TODO:
  - Make the find_last_session function quicker (hard-coding), so that it wastes less time on github-actions
  - Make the individual code run for 2/3 hours
  - Figure out how often to run the code on Github Actions (every (half) hour?), to not exceed 2000 minutes monthly
+ - Edit last_message.txt, and last_error.txt to only be 1 day?, beofore trying to tweet with Tweepy
 """
+
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new") # --headless
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -126,12 +134,13 @@ def find_metadata(session_key):
     sessions = _all_sessions()
     for s in sessions:
         if s.get("session_key") == session_key:
-            return HASHTAG_DICT[s["circuit_short_name"]] , s["session_name"], s["circuit_short_name"]
+            hashtag = HASHTAG_DICT.get(s["circuit_short_name"], "#UnknownGP")
+            return hashtag, s["session_name"], s["circuit_short_name"]
 
     raise ValueError(f"session_key {session_key} not found in session list")
 
 
-def tweet_with_selenium(tweet_text):
+def tweet_with_selenium(tweet_texts):
     username = os.environ["TWITTER_USERNAME"]
     password = os.environ["TWITTER_PASSWORD"]
 
@@ -159,16 +168,17 @@ def tweet_with_selenium(tweet_text):
         password_input.send_keys(Keys.RETURN)
 
         wait.until(EC.presence_of_element_located((By.XPATH, '//a[@href="/home"]')))
+        
+        for tweet_text in tweet_texts:
+            tweet_box = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@role="textbox"]')))
+            tweet_box.click()
+            tweet_box.send_keys(tweet_text)
+            time.sleep(1)
 
-        tweet_box = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@role="textbox"]')))
-        tweet_box.click()
-        tweet_box.send_keys(tweet_text)
-        time.sleep(1)
+            post_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="tweetButtonInline"]')))
+            post_button.click()
 
-        post_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="tweetButtonInline"]')))
-        post_button.click()
-
-        time.sleep(5)
+            time.sleep(5)
 
     except Exception as e:
         logger.info(f"Error: {e}")
@@ -207,38 +217,42 @@ def main():
     
     initialise_twitter_client()
 
+    tweets = []
     for message in messages[::-1]:
         hashtag, session_name, circuit_name = find_metadata(message["session_key"])
         if message["lap_number"]:
             tweet = f'{message["message"]}\n\nLap Number: {message["lap_number"]}\n\n{hashtag} | {session_name} | {circuit_name}'
         else:
             tweet = f'{message["message"]}\n\n{hashtag} | {session_name} | {circuit_name}'
+        tweets.append(tweet)
 
-        if try_tweepy:
-            try:
+    if try_tweepy:
+        try:
+            for tweet in tweets:
                 client.create_tweet(text=tweet)
                 logger.info(f"Tweeted: {tweet}")
-                with open(txt_path, "w") as f:
-                    f.write(f"{messages[0]}")
-            except Exception as e:
-                date_str = datetime.today().strftime("%Y-%m-%d")
-                with open(date_txt_path, "w") as f:
-                    f.write(date_str)
-                r = tweet_with_selenium(tweet)
-                if r:
-                    logger.info(f"Tweeted: {tweet}")
-                    with open(txt_path, "w") as f:
-                        f.write(f"{messages[0]}")
-        else:
-            r = tweet_with_selenium(tweet)
+            with open(txt_path, "w") as f:
+                f.write(f"{messages[0]}")
+        except Exception as e:
+            date_str = datetime.today().strftime("%Y-%m-%d")
+            with open(date_txt_path, "w") as f:
+                f.write(date_str)
+            r = tweet_with_selenium(tweets)
             if r:
-                logger.info(f"Tweeted: {tweet}")
+                logger.info(f"Tweeted: {tweets}")
                 with open(txt_path, "w") as f:
                     f.write(f"{messages[0]}")
+    else:
+        r = tweet_with_selenium(tweets)
+        if r:
+            logger.info(f"Tweeted: {tweets}")
+            with open(txt_path, "w") as f:
+                f.write(f"{messages[0]}")
 
 
 
 tweet_with_selenium("DEBUG >> TEST")
+logger.info("TWEETED SELENIUM TEST")
 quit()
 
 if find_last_session():
