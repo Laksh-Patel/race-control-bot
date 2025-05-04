@@ -20,6 +20,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 import logging
 import logging.handlers
 
+"""
+TODO:
+ - Make Selenium tweet mulltiplt things (if there are multiple things to tweet), saves time logging and relogging
+ - Make the find_last_session function quicker (hard-coding), so that it wastes less time on github-actions
+ - Make the individual code run for 2/3 hours
+ - Figure out how often to run the code on Github Actions (every (half) hour?), to not exceed 2000 minutes monthly
+"""
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger_file_handler = logging.handlers.RotatingFileHandler(
@@ -228,6 +236,10 @@ def main():
                 with open(txt_path, "w") as f:
                     f.write(f"{messages[0]}")
 
+
+
+tweet_with_selenium("DEBUG >> TEST")
+quit()
 
 if find_last_session():
 
