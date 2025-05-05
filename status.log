@@ -37,3 +37,27 @@ Lap Number: 1
 2025-05-03 17:20:09,961 - __main__ - INFO - ONGOING SESSION
 2025-05-03 17:32:22,445 - __main__ - INFO - ONGOING SESSION
 2025-05-03 17:49:23,922 - __main__ - INFO - ONGOING SESSION
+2025-05-05 16:34:51,829 - __main__ - INFO - Error: Message: 
+Stacktrace:
+#0 0x558f075c57fa <unknown>
+#1 0x558f07069e90 <unknown>
+#2 0x558f070bb870 <unknown>
+#3 0x558f070bba61 <unknown>
+#4 0x558f07109cb4 <unknown>
+#5 0x558f070e126d <unknown>
+#6 0x558f07107135 <unknown>
+#7 0x558f070e1013 <unknown>
+#8 0x558f070adb3b <unknown>
+#9 0x558f070ae7a1 <unknown>
+#10 0x558f0758ab9b <unknown>
+#11 0x558f0758ea8a <unknown>
+#12 0x558f07572912 <unknown>
+#13 0x558f0758f604 <unknown>
+#14 0x558f0755774f <unknown>
+#15 0x558f075b3678 <unknown>
+#16 0x558f075b3856 <unknown>
+#17 0x558f075c4666 <unknown>
+#18 0x7fd2e1c9caa4 <unknown>
+#19 0x7fd2e1d29c3c <unknown>
+
+2025-05-05 16:34:51,903 - __main__ - INFO - TWEETED SELENIUM TEST
