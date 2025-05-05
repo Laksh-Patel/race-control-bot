@@ -29,13 +29,6 @@ TODO:
  - Edit last_message.txt, and last_error.txt to only be 1 day?, beofore trying to tweet with Tweepy
 """
 
-options = webdriver.ChromeOptions()
-options.add_argument("--headless=new") # --headless
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger_file_handler = logging.handlers.RotatingFileHandler(
@@ -148,6 +141,9 @@ def tweet_with_selenium(tweet_texts):
         raise ValueError("Environment variables TWITTER_USERNAME or TWITTER_PASSWORD are missing.")
 
     options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Required for GitHub Actions
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
@@ -250,8 +246,7 @@ def main():
                 f.write(f"{messages[0]}")
 
 
-
-tweet_with_selenium("DEBUG >> TEST")
+tweet_with_selenium(["DEBUG >> TEST"])
 logger.info("TWEETED SELENIUM TEST")
 quit()
 
